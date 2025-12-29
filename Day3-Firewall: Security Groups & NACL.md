@@ -1,9 +1,3 @@
-# What is a Firewall?
-
-This document explains **what a firewall is** in a **simple and beginner-friendly way**, suitable for GitHub notes.
-
----
-
 ## What is a Firewall?
 
 A **firewall** is a **security system** that monitors and controls **incoming and outgoing network traffic** based on predefined rules.
