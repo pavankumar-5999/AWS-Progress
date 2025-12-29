@@ -4,7 +4,7 @@ A **firewall** is a **security system** that monitors and controls **incoming an
 
 In simple words:
 
-> **A firewall decides what traffic is allowed and what traffic is blocked.**
+> **A firewall controls network traffic by allowing or denying packets based on security rules.**
 
 It acts like a **security guard** between a trusted network and an untrusted network (like the internet).
 
