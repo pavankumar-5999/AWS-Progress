@@ -109,7 +109,3 @@ Without Elastic IP, NAT Gateway cannot access the internet.
 
 
 > **Private needs internet → NAT Gateway → Public Subnet → IGW → Internet**
-
-
-✅ Interview-ready
-✅ GitHub documentation
