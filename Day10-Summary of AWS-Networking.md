@@ -10,7 +10,6 @@
 * CIDR blocks define the IP address range of the VPC.
 
 **Interview Tip:** Know differences between **public vs private subnets**, route tables, and IGW.
-
 ---
 
 ## Day 2: NAT Gateway
