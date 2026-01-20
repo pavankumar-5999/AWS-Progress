@@ -80,12 +80,29 @@
 * Strongly recommended for root users and privileged IAM users.
 * Types: Virtual MFA (app-based), Hardware MFA.
 
-## Knowledge Check Questions
+### Knowledge Check Questions and Answers
 
-* What is the difference between an IAM user and an IAM role?
-* Why is it recommended to avoid using the root user for daily operations?
-* How do IAM policies enforce the principle of least privilege?
-* What are the benefits of using IAM groups?
+**1. What is the difference between an IAM user and an IAM role?**
+
+* **IAM User:** Represents an individual person or service that needs access to AWS resources. Users have permanent credentials (username, password, access keys).
+* **IAM Role:** Represents a set of permissions that can be assumed by trusted entities such as users, applications, or AWS services. Roles do not have permanent credentials; they provide temporary security credentials when assumed.
+
+**2. Why is it recommended to avoid using the root user for daily operations?**
+
+* The root user has unrestricted access to all AWS resources, including billing and account settings. Using it regularly increases security risk. Best practice is to create IAM users with limited permissions for day-to-day tasks.
+
+**3. How do IAM policies enforce the principle of least privilege?**
+
+* IAM policies explicitly define what actions are allowed or denied for a user, group, or role. By granting only the permissions necessary to perform a task, policies prevent excessive access and reduce the potential impact of security breaches.
+
+**4. What are the benefits of using IAM groups?**
+
+* IAM groups simplify permission management by allowing you to assign policies to a group rather than individual users. Adding or removing users from groups automatically grants or revokes the associated permissions, improving efficiency and consistency.
+
+**5. What is an Inline Policy?**
+
+* An Inline Policy is a policy that is directly attached to a specific IAM user, group, or role. Unlike managed policies, inline policies are embedded into a single identity and are often used for permissions that should be tightly controlled and not shared with others.
+
 
 ## Conclusion
 
