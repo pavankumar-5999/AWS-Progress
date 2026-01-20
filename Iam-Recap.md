@@ -1,4 +1,4 @@
-# AWS IAM - Complete SAA-C03 Study Guide
+# AWS IAM
 
 ## Part 1: Core Concepts (Foundation)
 
