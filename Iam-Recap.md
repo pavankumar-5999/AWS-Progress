@@ -642,4 +642,4 @@ This denies instance termination unless MFA was used during authentication.
 - Implement cross-account access
 - Secure AWS accounts following best practices
 
-Good luck on your SAA-C03 exam!
+
