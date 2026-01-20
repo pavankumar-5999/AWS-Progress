@@ -643,3 +643,259 @@ This denies instance termination unless MFA was used during authentication.
 - Secure AWS accounts following best practices
 
 
+# AWS IAM - Quick Summary
+
+## What is IAM?
+Global service for controlling **who** can access **what** in AWS. Free, no region needed.
+
+---
+
+## The Big 4 Components
+
+### Users
+People or applications with permanent credentials (password or access keys)
+
+### Groups
+Collections of users sharing permissions (groups cannot contain other groups)
+
+### Roles
+Temporary credentials assumed by users/services (no passwords or access keys stored)
+
+### Policies
+JSON documents defining permissions (Allow/Deny actions on resources)
+
+---
+
+## Permission Evaluation Rules (CRITICAL!)
+
+### The Decision Flow
+1. **Default = Implicit Deny** (no access by default)
+2. **Explicit Deny ALWAYS wins** (overrides everything)
+3. **Need Explicit Allow** (without a Deny) to get access
+4. **Most restrictive policy wins**
+
+### Simple Rule
+**Deny > Allow > Deny (default)**
+
+---
+
+## Policy Types
+
+**AWS Managed Policies**
+- Pre-built by AWS
+- Cannot modify
+- Auto-updated by AWS
+- Examples: AdministratorAccess, ReadOnlyAccess
+
+**Customer Managed Policies**
+- You create and maintain
+- Reusable across your account
+- Full control over permissions
+
+**Inline Policies**
+- Embedded in single user/group/role
+- 1:1 relationship
+- Deleted when identity is deleted
+
+**Resource-Based Policies**
+- Attached to resources (S3 buckets, SQS queues)
+- Specifies WHO (Principal) can access
+- Used for cross-account access
+
+---
+
+## IAM Roles - Deep Dive
+
+### Two Parts of a Role
+
+**Trust Policy (AssumeRolePolicyDocument)**
+- Defines WHO can assume the role
+- Specifies the Principal (service, account, user)
+
+**Permission Policy**
+- Defines WHAT the role can do once assumed
+- Standard IAM policy format
+
+### Why Use Roles?
+- Temporary credentials that auto-rotate
+- No secrets management needed
+- Better security than access keys
+- Required for AWS services (EC2, Lambda, etc.)
+
+### Common Use Cases
+- EC2 instance accessing S3
+- Lambda function accessing DynamoDB
+- Cross-account resource access
+- External user authentication (Cognito)
+
+---
+
+## Security Best Practices
+
+### Root Account
+- Enable MFA immediately
+- Don't use for daily tasks
+- Create admin IAM user instead
+- Lock away root credentials
+
+### Multi-Factor Authentication (MFA)
+- Enable for all human users
+- Mandatory for privileged accounts
+- Use virtual MFA or hardware tokens
+
+### Access Keys
+- Rotate every 90 days
+- Delete unused keys
+- Never hardcode in applications
+- Use roles instead wherever possible
+
+### Least Privilege Principle
+- Start with zero permissions
+- Grant minimum needed for the task
+- Review and reduce over time
+- Use Access Advisor to identify unused permissions
+
+### Never Do This
+- ❌ Hardcode credentials in code
+- ❌ Store access keys on EC2 instances
+- ❌ Share IAM user credentials
+- ❌ Use root account for daily tasks
+- ❌ Grant `Action: *` on `Resource: *` unnecessarily
+
+---
+
+## Monitoring and Audit Tools
+
+### IAM Credentials Report (Account-Level)
+**What it shows:**
+- All IAM users in account
+- Password status and last used
+- Access keys status
+- MFA device status
+
+**Use for:**
+- Compliance auditing
+- Identifying inactive users
+- Credential rotation tracking
+
+### IAM Access Advisor (User-Level)
+**What it shows:**
+- Services user is allowed to access
+- When those services were last accessed
+
+**Use for:**
+- Implementing least privilege
+- Identifying unused permissions
+- Refining policies based on actual usage
+
+---
+
+## Common Exam Scenarios - Quick Answers
+
+### EC2 needs to access S3?
+✅ Create IAM role with S3 permissions, attach to EC2 instance
+❌ Never store access keys on EC2
+
+### Cross-account access needed?
+✅ Create IAM role with trust policy allowing source account
+✅ Source account needs permission to sts:AssumeRole
+
+### Mobile app users need AWS access?
+✅ Use Amazon Cognito + IAM roles for temporary credentials
+❌ Never embed permanent credentials in apps
+
+### Prevent developers from privilege escalation?
+✅ Use Permission Boundaries to limit maximum permissions
+✅ Developers can't grant more permissions than their boundary allows
+
+### Grant third-party access to S3 bucket?
+✅ Need BOTH: IAM policy in source account AND bucket policy in destination
+✅ OR create assumable role with S3 permissions
+
+### Identify unused permissions?
+✅ Use IAM Access Advisor to see last access times
+✅ Generate IAM Credentials Report for user activity
+
+---
+
+## Policy Troubleshooting Checklist
+
+When access is denied, check in this order:
+
+1. **Is there an explicit Deny?** → Deny always wins
+2. **Is there an explicit Allow?** → Required for access
+3. **Are you checking the right policy type?** → Identity-based vs Resource-based
+4. **Is MFA required but not present?** → Check Condition blocks
+5. **Is IP restriction blocking access?** → Check source IP conditions
+6. **Are SCPs or Permission Boundaries limiting?** → Check organization/account limits
+7. **For S3: Do BOTH policies allow?** → IAM policy AND bucket policy needed
+
+---
+
+## Exam Quick Reference
+
+| Need to... | Use... |
+|-----------|--------|
+| Give EC2 permissions | IAM Role (Instance Profile) |
+| Cross-account access | IAM Role + Trust Policy |
+| External users (mobile) | Cognito + IAM Role |
+| Enterprise SSO | SAML Federation + IAM Role |
+| Prevent privilege escalation | Permission Boundaries |
+| Audit credentials | IAM Credentials Report |
+| Find unused permissions | IAM Access Advisor |
+| Temporary credentials | STS AssumeRole |
+| S3 cross-account | IAM Policy + Bucket Policy |
+
+---
+
+## Red Flags in Exam Questions
+
+If you see these, it's usually WRONG:
+- "Hardcode credentials" → Use roles instead
+- "Share IAM user" → Create individual users
+- "Root account for daily tasks" → Use IAM users
+- "Store access keys on EC2" → Use instance roles
+- "Permanent credentials for apps" → Use temporary credentials
+
+---
+
+## Key Limits to Remember
+
+- **Users per account**: 5,000
+- **Groups per account**: 300
+- **Roles per account**: 1,000
+- **Groups per user**: 10
+- **Managed policies per user/group/role**: 10
+- **Access keys per user**: 2 (for rotation)
+- **Role session duration**: 1-12 hours
+
+---
+
+## One-Sentence Summary
+
+IAM controls AWS access through users/roles and policies, where **Deny always wins**, **roles beat access keys**, and **least privilege is king**.
+
+---
+
+## You're Ready When You Can:
+
+✅ Explain the difference between users, groups, and roles  
+✅ Describe policy evaluation logic (Deny > Allow > Deny)  
+✅ Choose roles over access keys for AWS services  
+✅ Implement cross-account access with trust policies  
+✅ Troubleshoot permission denied errors  
+✅ Secure AWS accounts following best practices  
+✅ Write basic IAM policies in JSON format  
+
+---
+
+## Final Exam Tips
+
+**Most Tested Topics:**
+1. Policy evaluation logic (Deny always wins)
+2. IAM roles for EC2/Lambda
+3. Cross-account access patterns
+4. Security best practices (MFA, least privilege)
+5. Difference between identity-based and resource-based policies
+
+**Remember:** If a question mentions hardcoding credentials, storing keys, or using root account for daily tasks → that's the WRONG answer. AWS always wants you to use roles, temporary credentials, and follow least privilege.
